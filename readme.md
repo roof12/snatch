@@ -1,0 +1,4 @@
+Snatch
+
+$ npm install
+$ grunt
