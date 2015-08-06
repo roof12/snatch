@@ -1,0 +1,17 @@
+{
+  "name": "snatch",
+  "version": "0.0.0",
+  "release": "None",
+  "description": "A game",
+  "author": "Scott Lewis",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roof12/snatch.git"
+  },
+
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-connect": "~0.5.0"
+  }
+}
