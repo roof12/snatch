@@ -15,7 +15,10 @@
       var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
       var attached = false;
       var attachDown = false;
-      var angularVelocity = 290;
+      var attachedSprite = null;
+
+      var angularVelocity = 250;
+      var boundingBox = 50;
 
       function preload() {
         game.load.image('player', 'assets/ship.gif');
@@ -29,7 +32,10 @@
         thing0.anchor.setTo(0.5, 0.5);
 
         thing1 = game.add.sprite(385, 330, 'thing');
+        thing1.anchor.setTo(0.5, 0.5);
+
         thing2 = game.add.sprite(425, 330, 'thing');
+        thing2.anchor.setTo(0.5, 0.5);
 
         player = game.add.sprite(400, 300, 'player');
         player.anchor.setTo(0.5, 0.5);
@@ -60,13 +66,40 @@
         }
         if (attach.isUp && attachDown) {
           attachDown = false;
-          attached = !attached;
+          if (attachedSprite) {
+            detachSprite();
+          } else {
+            attachIfNear(thing0);
+            attachIfNear(thing1);
+            attachIfNear(thing2);
+          }
         }
 
-        if (attached) {
-          thing0.x = player.x;
-          thing0.y = player.y;
+        if (attachedSprite) {
+          attachedSprite.x = player.x;
+          attachedSprite.y = player.y;       
         }
+      }
+
+      function attachIfNear(sprite) {
+        if (attachedSprite === null && near(player, sprite)) {
+          attachSprite(sprite);
+        }
+      }
+
+      function near(sprite0, sprite1) {
+        var dx = Math.abs(sprite0.x - sprite1.x);
+        var dy = Math.abs(sprite0.y - sprite1.y);
+        console.log("dx: " + dx + " dy: " + dy);
+        return (dx < boundingBox) && (dy < boundingBox);
+      }
+
+      function detachSprite() {
+        attachedSprite = null;
+      }
+
+      function attachSprite(sprite) {
+        attachedSprite = sprite;
       }
     </script>
   </body>
