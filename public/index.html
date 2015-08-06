@@ -13,6 +13,9 @@
   <body>
     <script type="text/javascript">
       var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+      var attached = false;
+      var attachDown = false;
+      var angularVelocity = 290;
 
       function preload() {
         game.load.image('player', 'assets/ship.gif');
@@ -22,15 +25,19 @@
       function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.add.sprite(345, 330, 'thing');
-        game.add.sprite(385, 330, 'thing');
-        game.add.sprite(425, 330, 'thing');
+        thing0 = game.add.sprite(345, 330, 'thing');
+        thing0.anchor.setTo(0.5, 0.5);
+
+        thing1 = game.add.sprite(385, 330, 'thing');
+        thing2 = game.add.sprite(425, 330, 'thing');
 
         player = game.add.sprite(400, 300, 'player');
         player.anchor.setTo(0.5, 0.5);
         player.angle = -90;
 
         game.physics.arcade.enable(player, Phaser.Physics.ARCADE);
+
+        attach = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
       }
 
       function update() {
@@ -38,19 +45,27 @@
         player.body.velocity.y = 0;
         player.body.angularVelocity = 0;
 
-        var av = 290;
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-            player.body.angularVelocity = -av;
-        }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-            player.body.angularVelocity = av;
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+          player.body.angularVelocity = -angularVelocity;
+        } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+          player.body.angularVelocity = angularVelocity;
         }
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
-        {
-            game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+          game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
+        }
+
+        if (attach.isDown && !attachDown) {
+          attachDown = true;
+        }
+        if (attach.isUp && attachDown) {
+          attachDown = false;
+          attached = !attached;
+        }
+
+        if (attached) {
+          thing0.x = player.x;
+          thing0.y = player.y;
         }
       }
     </script>
