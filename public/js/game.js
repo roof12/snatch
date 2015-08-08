@@ -11,6 +11,14 @@ var enemies = [];
 var angularVelocity = 320;
 var boundingBox = 30;
 
+var buffer = 120;
+var safeZone = new Phaser.Polygon([
+  new Phaser.Point(buffer, buffer),
+  new Phaser.Point(game.width - buffer, buffer),
+  new Phaser.Point(game.width-buffer, game.height-buffer),
+  new Phaser.Point(buffer, game.height-buffer)
+]);
+
 function preload() {
   game.load.image('player', 'assets/ship.gif');
   game.load.image('thing', 'assets/thing.png');
@@ -29,8 +37,8 @@ function create() {
     thingX += 40;
   }
 
-  var enemyX = 20;
-  var enemyY = 10;
+  var enemyX = 50;
+  var enemyY = 50;
   var enemySpeed = 60;
   for(var i=0; i<enemyCt; i++) {
     var enemy = game.add.sprite(enemyX, enemyY, 'enemy');
@@ -99,6 +107,10 @@ function distance(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow(x1-x0,2) + Math.pow(y1-y0,2))
 }
 
+function distanceFromCenter(sprite) {
+  return distance(game.width/2, game.height/2, sprite.x, sprite.y);
+}
+
 function distanceFromEdge(sprite) {
   return Math.min(
     distance(sprite.x, sprite.y, 0, 0),
@@ -109,11 +121,9 @@ function distanceFromEdge(sprite) {
 }
 
 function moveShip(sprite) {
-  var d = distanceFromEdge(sprite);
-  if (d < sprite.lastDistance) {
-    sprite.body.angularVelocity = angularVelocity/2;          
-  } else if (Math.random() < 0.06) {
-    sprite.body.angularVelocity = -angularVelocity/2;
+  var d = distanceFromCenter(sprite);
+  if (d > sprite.lastDistance && !safeZone.contains(sprite.x, sprite.y)) {
+    sprite.body.angularVelocity = angularVelocity*2;
   } else {
     sprite.body.angularVelocity = 0;
   }
