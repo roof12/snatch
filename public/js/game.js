@@ -46,11 +46,7 @@ function create() {
     enemySpeed += 20;
   }
 
-  player = game.add.sprite(game.width / 2, game.height / 2, 'player');
-  player.anchor.setTo(0.5, 0.5);
-  player.angle = -90;
-
-  game.physics.arcade.enable(player, Phaser.Physics.ARCADE);
+  player = new Player(game);
 
   attach = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
@@ -61,21 +57,7 @@ function update() {
     enemies[i].update();
   }
 
-  player.body.velocity.x = 0;
-  player.body.velocity.y = 0;
-  player.body.angularVelocity = 0;
-
-  if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-    player.body.angularVelocity = -angularVelocity;
-  } else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-    player.body.angularVelocity = angularVelocity;
-  }
-
-  if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-    game.physics.arcade.velocityFromAngle(player.angle, 300, player.body.velocity);
-  } else {
-    game.physics.arcade.velocityFromAngle(player.angle, 100, player.body.velocity);
-  }
+  player.update();
 
   if (attach.isDown && !attachDown) {
     attachDown = true;
