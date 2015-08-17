@@ -1,11 +1,11 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(200, 150, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var attached = false;
 var attachDown = false;
 var attachedSprite = null;
 
-var thingCt = 3;
+var thingCt = 0;
 var things = [];
-var enemyCt = 60;
+var enemyCt = 1;
 var enemies = [];
 
 var angularVelocity = 320;
@@ -41,18 +41,12 @@ function create() {
   var enemyY = 50;
   var enemySpeed = 60;
   for(var i=0; i<enemyCt; i++) {
-    var enemy = game.add.sprite(enemyX, enemyY, 'enemy');
-    enemy.anchor.setTo(0.5, 0.5);
-    enemy.speed = enemySpeed;
-    game.physics.arcade.enable(enemy, Phaser.Physics.ARCADE);
-
-    enemies.push(enemy);
-
+    enemies.push(new Enemy(game, enemyX, enemyY, enemySpeed));
     enemyY += 10;
     enemySpeed += 20;
   }
 
-  player = game.add.sprite(400, 300, 'player');
+  player = game.add.sprite(game.width / 2, game.height / 2, 'player');
   player.anchor.setTo(0.5, 0.5);
   player.angle = -90;
 
@@ -64,7 +58,7 @@ function create() {
 function update() {
 
   for(var i=0; i<enemyCt; i++) {
-    moveShip(enemies[i]);
+    enemies[i].update();
   }
 
   player.body.velocity.x = 0;
@@ -118,17 +112,6 @@ function distanceFromEdge(sprite) {
     distance(sprite.x, sprite.y, 0, 600),
     distance(sprite.x, sprite.y, 800, 600)
   )
-}
-
-function moveShip(sprite) {
-  var d = distanceFromCenter(sprite);
-  if (d > sprite.lastDistance && !safeZone.contains(sprite.x, sprite.y)) {
-    sprite.body.angularVelocity = angularVelocity*2;
-  } else {
-    sprite.body.angularVelocity = 0;
-  }
-  sprite.lastDistance = d;
-  game.physics.arcade.velocityFromAngle(sprite.angle, sprite.speed, sprite.body.velocity);
 }
 
 function attachIfNear(sprite) {
