@@ -1,11 +1,11 @@
-var game = new Phaser.Game(200, 150, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var attached = false;
 var attachDown = false;
 var attachedSprite = null;
 
-var thingCt = 0;
+var thingCt = 3;
 var things = [];
-var enemyCt = 1;
+var enemyCt = 30;
 var enemies = [];
 
 var angularVelocity = 320;
@@ -74,8 +74,8 @@ function update() {
   }
 
   if (attachedSprite) {
-    attachedSprite.x = player.x;
-    attachedSprite.y = player.y;       
+    attachedSprite.x = player.sprite.x;
+    attachedSprite.y = player.sprite.y;       
   }
 }
 
@@ -97,7 +97,7 @@ function distanceFromEdge(sprite) {
 }
 
 function attachIfNear(sprite) {
-  if (attachedSprite === null && near(player, sprite)) {
+  if (attachedSprite === null && near(player.sprite, sprite)) {
     attachSprite(sprite);
   }
 }
