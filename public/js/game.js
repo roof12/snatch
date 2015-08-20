@@ -49,33 +49,38 @@ function create() {
   player = new Player(game);
 
   attach = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  game.phase = 'start';
 }
 
 function update() {
+  if (game.phase === 'start') {
+    game.debug.text('Press any key to start', 200, 200, 'rgb(0,255,0)');
+  } else {
+    for(var i=0; i<enemyCt; i++) {
+      enemies[i].update();
+    }
 
-  for(var i=0; i<enemyCt; i++) {
-    enemies[i].update();
-  }
+    player.update();
 
-  player.update();
-
-  if (attach.isDown && !attachDown) {
-    attachDown = true;
-  }
-  if (attach.isUp && attachDown) {
-    attachDown = false;
-    if (attachedSprite) {
-      detachSprite();
-    } else {
-      for(var i=0; i<thingCt; i++) {
-        attachIfNear(things[i]);
+    if (attach.isDown && !attachDown) {
+      attachDown = true;
+    }
+    if (attach.isUp && attachDown) {
+      attachDown = false;
+      if (attachedSprite) {
+        detachSprite();
+      } else {
+        for(var i=0; i<thingCt; i++) {
+          attachIfNear(things[i]);
+        }
       }
     }
-  }
 
-  if (attachedSprite) {
-    attachedSprite.x = player.sprite.x;
-    attachedSprite.y = player.sprite.y;       
+    if (attachedSprite) {
+      attachedSprite.x = player.sprite.x;
+      attachedSprite.y = player.sprite.y;       
+    }
+
   }
 }
 
